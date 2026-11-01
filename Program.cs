@@ -32,6 +32,12 @@ namespace MovieTicketBooking
             // Add API Explorer
             builder.Services.AddEndpointsApiExplorer();
 
+            builder.Services.AddScoped<ITheatreRepository, TheatreRepository>();
+            builder.Services.AddScoped<ITheatreService, TheatreService>();
+
+
+            builder.Services.AddScoped<IScreenRepository, ScreenRepository>();
+            builder.Services.AddScoped<IScreenService, ScreenService>();
             // Add Swagger
             builder.Services.AddSwaggerGen();
 
