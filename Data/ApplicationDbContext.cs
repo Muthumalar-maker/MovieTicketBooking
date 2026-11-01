@@ -112,6 +112,15 @@ namespace MovieTicketBooking.Data
                     .WithMany(s => s.BookingSeats)
                     .HasForeignKey(bs => bs.SeatId)
                     .OnDelete(DeleteBehavior.NoAction);
+
+                //Screen
+                modelBuilder.Entity<Screen>()
+                .HasIndex(s => new { s.TheatreId, s.ScreenName })
+                .IsUnique();
+
+                modelBuilder.Entity<Seat>()
+                    .HasIndex(s => new { s.ScreenId, s.RowName, s.SeatNumber })
+                    .IsUnique();
             });
 
             // Show Configuration

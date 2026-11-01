@@ -38,6 +38,10 @@ namespace MovieTicketBooking
 
             builder.Services.AddScoped<IScreenRepository, ScreenRepository>();
             builder.Services.AddScoped<IScreenService, ScreenService>();
+
+            builder.Services.AddScoped<ISeatRepository, SeatRepository>();
+            builder.Services.AddScoped<ISeatService, SeatService>();
+
             // Add Swagger
             builder.Services.AddSwaggerGen();
 

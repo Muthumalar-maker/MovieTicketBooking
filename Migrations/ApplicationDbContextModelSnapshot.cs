@@ -142,14 +142,15 @@ namespace MovieTicketBooking.Migrations
 
                     b.Property<string>("ScreenName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("TheatreId")
                         .HasColumnType("int");
 
                     b.HasKey("ScreenId");
 
-                    b.HasIndex("TheatreId");
+                    b.HasIndex("TheatreId", "ScreenName")
+                        .IsUnique();
 
                     b.ToTable("Screens");
                 });
@@ -164,7 +165,7 @@ namespace MovieTicketBooking.Migrations
 
                     b.Property<string>("RowName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("ScreenId")
                         .HasColumnType("int");
@@ -178,7 +179,8 @@ namespace MovieTicketBooking.Migrations
 
                     b.HasKey("SeatId");
 
-                    b.HasIndex("ScreenId");
+                    b.HasIndex("ScreenId", "RowName", "SeatNumber")
+                        .IsUnique();
 
                     b.ToTable("Seats");
                 });
