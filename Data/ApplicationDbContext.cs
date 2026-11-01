@@ -50,7 +50,68 @@ namespace MovieTicketBooking.Data
                       .IsRequired()
                       .HasMaxLength(50);
 
+                // Theatre - Screen
+                modelBuilder.Entity<Screen>()
+                    .HasOne(s => s.Theatre)
+                    .WithMany(t => t.Screens)
+                    .HasForeignKey(s => s.TheatreId)
+                    .OnDelete(DeleteBehavior.NoAction);
 
+                // Screen - Seat
+                modelBuilder.Entity<Seat>()
+                    .HasOne(s => s.Screen)
+                    .WithMany(sc => sc.Seats)
+                    .HasForeignKey(s => s.ScreenId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                // Movie - Show
+                modelBuilder.Entity<Show>()
+                    .HasOne(s => s.Movie)
+                    .WithMany(m => m.Shows)
+                    .HasForeignKey(s => s.MovieId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                // Screen - Show
+                modelBuilder.Entity<Show>()
+                    .HasOne(s => s.Screen)
+                    .WithMany(sc => sc.Shows)
+                    .HasForeignKey(s => s.ScreenId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                // Show - ShowSeat
+                modelBuilder.Entity<ShowSeat>()
+                    .HasOne(ss => ss.Show)
+                    .WithMany(s => s.ShowSeats)
+                    .HasForeignKey(ss => ss.ShowId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                // Seat - ShowSeat
+                modelBuilder.Entity<ShowSeat>()
+                    .HasOne(ss => ss.Seat)
+                    .WithMany(s => s.ShowSeats)
+                    .HasForeignKey(ss => ss.SeatId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                // Show - Booking
+                modelBuilder.Entity<Booking>()
+                    .HasOne(b => b.Show)
+                    .WithMany(s => s.Bookings)
+                    .HasForeignKey(b => b.ShowId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                // Booking - BookingSeat
+                modelBuilder.Entity<BookingSeat>()
+                    .HasOne(bs => bs.Booking)
+                    .WithMany(b => b.BookingSeats)
+                    .HasForeignKey(bs => bs.BookingId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                // Seat - BookingSeat
+                modelBuilder.Entity<BookingSeat>()
+                    .HasOne(bs => bs.Seat)
+                    .WithMany(s => s.BookingSeats)
+                    .HasForeignKey(bs => bs.SeatId)
+                    .OnDelete(DeleteBehavior.NoAction);
             });
 
             // Show Configuration
