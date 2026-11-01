@@ -240,7 +240,8 @@ namespace MovieTicketBooking.Migrations
 
                     b.HasIndex("SeatId");
 
-                    b.HasIndex("ShowId");
+                    b.HasIndex("ShowId", "SeatId")
+                        .IsUnique();
 
                     b.ToTable("ShowSeats");
                 });

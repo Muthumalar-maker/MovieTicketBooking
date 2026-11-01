@@ -121,6 +121,10 @@ namespace MovieTicketBooking.Data
                 modelBuilder.Entity<Seat>()
                     .HasIndex(s => new { s.ScreenId, s.RowName, s.SeatNumber })
                     .IsUnique();
+
+                modelBuilder.Entity<ShowSeat>()
+    .HasIndex(ss => new { ss.ShowId, ss.SeatId })
+    .IsUnique();
             });
 
             // Show Configuration
