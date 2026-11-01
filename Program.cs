@@ -4,6 +4,8 @@ using MovieTicketBooking.Repositories;
 using MovieTicketBooking.Repositories.Interfaces;
 using MovieTicketBooking.Services;
 using MovieTicketBooking.Services.Interfaces;
+using MovieTicketBooking.Middleware;
+
 
 namespace MovieTicketBooking
 {
@@ -54,6 +56,9 @@ namespace MovieTicketBooking
             builder.Services.AddScoped<IBookingRepository, BookingRepository>();
             builder.Services.AddScoped<IBookingService, BookingService>();
 
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+            builder.Services.AddProblemDetails();
+
 
             // Add Swagger
             builder.Services.AddSwaggerGen();
@@ -66,6 +71,8 @@ namespace MovieTicketBooking
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseExceptionHandler();
 
             app.UseHttpsRedirection();
 
