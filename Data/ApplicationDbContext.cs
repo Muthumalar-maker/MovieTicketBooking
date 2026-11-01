@@ -49,6 +49,29 @@ namespace MovieTicketBooking.Data
                 entity.Property(m => m.Genre)
                       .IsRequired()
                       .HasMaxLength(50);
+
+
+            });
+
+            // Show Configuration
+            modelBuilder.Entity<Show>(entity =>
+            {
+                entity.Property(s => s.TicketPrice)
+                      .HasPrecision(10, 2);
+            });
+
+            // Booking Configuration
+            modelBuilder.Entity<Booking>(entity =>
+            {
+                entity.Property(b => b.TotalAmount)
+                      .HasPrecision(10, 2);
+            });
+
+            // BookingSeat Configuration
+            modelBuilder.Entity<BookingSeat>(entity =>
+            {
+                entity.Property(bs => bs.Price)
+                      .HasPrecision(10, 2);
             });
         }
     }
