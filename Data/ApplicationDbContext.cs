@@ -11,6 +11,7 @@ namespace MovieTicketBooking.Data
         {
         }
 
+        public DbSet<User> Users { get; set; }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Theatre> Theatres { get; set; }
         public DbSet<Screen> Screens { get; set; }
@@ -125,6 +126,12 @@ namespace MovieTicketBooking.Data
                 modelBuilder.Entity<ShowSeat>()
     .HasIndex(ss => new { ss.ShowId, ss.SeatId })
     .IsUnique();
+
+                modelBuilder.Entity<ShowSeat>()
+   .HasIndex(ss => new { ss.ShowId, ss.SeatId })
+   .IsUnique();
+
+
             });
 
             // Show Configuration
