@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-
 using MovieTicketBooking.Data;
 using MovieTicketBooking.Models;
 using MovieTicketBooking.Repositories;
@@ -12,6 +11,9 @@ using MovieTicketBooking.Repositories.Interfaces;
 using MovieTicketBooking.Services;
 using MovieTicketBooking.Services.Interfaces;
 using MovieTicketBooking.Middleware;
+using Microsoft.AspNetCore.Authorization;
+using MovieTicketBooking.Constants;
+
 
 namespace MovieTicketBooking
 {
@@ -108,6 +110,8 @@ namespace MovieTicketBooking
 
             var app = builder.Build();
 
+
+
             // Development Admin Account
             if (app.Environment.IsDevelopment())
             {
@@ -139,6 +143,10 @@ namespace MovieTicketBooking
                         context.Users.Add(admin);
                         await context.SaveChangesAsync();
                     }
+
+                    
+                    // Customer Account
+                   await CustomerSeeder.SeedAsync(context, passwordHasher);
                 }
             }
 
