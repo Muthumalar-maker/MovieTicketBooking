@@ -2,6 +2,8 @@
 using MovieTicketBooking.DTOs.Bookings;
 using MovieTicketBooking.Services.Interfaces;
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace MovieTicketBooking.Controllers
 {
     [Route("api/[controller]")]
@@ -18,6 +20,7 @@ namespace MovieTicketBooking.Controllers
         // GET: api/Bookings
         // GET: api/Bookings?showId=1
         // GET: api/Bookings?status=Confirmed
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<BookingResponse>>> GetAll(
             [FromQuery] int? showId,

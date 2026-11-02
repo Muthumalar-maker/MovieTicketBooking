@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using MovieTicketBooking.Constants;
 using MovieTicketBooking.DTOs.Screens;
 using MovieTicketBooking.Services.Interfaces;
 
@@ -39,6 +41,9 @@ namespace MovieTicketBooking.Controllers
             }
         }
 
+
+        [Authorize(Roles = UserRoles.Admin)]
+        [HttpPost]
         [HttpPost]
         public async Task<ActionResult<ScreenResponse>> Create(
             CreateScreenRequest request)
@@ -58,6 +63,9 @@ namespace MovieTicketBooking.Controllers
             }
         }
 
+
+        [Authorize(Roles = UserRoles.Admin)]
+        [HttpPut("{id}")]
         [HttpPut("{id:int}")]
         public async Task<ActionResult<ScreenResponse>> Update(
             int id, UpdateScreenRequest request)
@@ -77,6 +85,9 @@ namespace MovieTicketBooking.Controllers
             }
         }
 
+
+        [Authorize(Roles = UserRoles.Admin)]
+        [HttpDelete("{id}")]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
