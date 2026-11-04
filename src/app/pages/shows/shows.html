@@ -1,0 +1,63 @@
+<div class="shows-container">
+
+  <header class="shows-header">
+
+    <h1>Movie Ticket Booking</h1>
+
+    <p>Select your preferred show timing</p>
+
+  </header>
+
+  <button class="back-button" (click)="goBack()">
+    ← Back to Movies
+  </button>
+
+  <h2>Available Shows</h2>
+
+  <div *ngIf="loading" class="message">
+    Loading shows...
+  </div>
+
+  <div *ngIf="message && !loading" class="message">
+    {{ message }}
+  </div>
+
+  <div class="show-list" *ngIf="!loading && shows.length > 0">
+
+    <div class="show-card" *ngFor="let show of shows">
+
+      <h3>Show #{{ show.showId }}</h3>
+
+      <p>
+        <strong>Show Date:</strong>
+        {{ show.showDate | date:'dd MMM yyyy' }}
+      </p>
+
+      <p>
+        <strong>Start Time:</strong>
+        {{ show.startTime }}
+      </p>
+
+      <p>
+        <strong>End Time:</strong>
+        {{ show.endTime }}
+      </p>
+
+      <p>
+        <strong>Screen:</strong>
+        {{ show.screenId }}
+      </p>
+
+      <p class="price">
+        ₹{{ show.ticketPrice }}
+      </p>
+
+      <button (click)="selectShow(show)">
+        Select Show
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

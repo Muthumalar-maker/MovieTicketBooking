@@ -1,0 +1,63 @@
+
+<header class="movies-header">
+  <h1>Movie Ticket Booking</h1>
+  <p>Choose your favourite movie</p>
+</header>
+
+<main class="movies-container">
+
+  <h2>Available Movies</h2>
+
+  <p *ngIf="loading" class="message">
+    Loading movies...
+  </p>
+
+  <p *ngIf="!loading && message" class="message">
+    {{ message }}
+  </p>
+
+  <div class="movie-grid" *ngIf="!loading && movies.length > 0">
+
+    <div class="movie-card" *ngFor="let movie of movies">
+
+      <div class="movie-poster">
+        <span>🎬</span>
+      </div>
+
+      <div class="movie-details">
+
+        <h3>{{ movie.title }}</h3>
+
+        <p>{{ movie.description }}</p>
+
+        <p>
+          <strong>Language:</strong>
+          {{ movie.language }}
+        </p>
+
+        <p>
+          <strong>Genre:</strong>
+          {{ movie.genre }}
+        </p>
+
+        <p>
+          <strong>Duration:</strong>
+          {{ movie.durationMinutes }} minutes
+        </p>
+
+        <p>
+          <strong>Release Date:</strong>
+          {{ movie.releaseDate | date:'dd-MM-yyyy' }}
+        </p>
+
+        <button type="button" (click)="selectMovie(movie)">
+          View Shows
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</main>

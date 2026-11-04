@@ -1,0 +1,161 @@
+* {
+  box-sizing: border-box;
+}
+
+.seats-container {
+  min-height: 100vh;
+  padding: 30px;
+  background: #f4f6fb;
+}
+
+.seats-header {
+  background: #172554;
+  color: white;
+  text-align: center;
+  padding: 30px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+}
+
+.seats-header h1 {
+  margin: 0;
+}
+
+.seats-header p {
+  color: #dbeafe;
+}
+
+.seats-container h2 {
+  text-align: center;
+  color: #172554;
+  margin: 30px 0;
+}
+
+.back-button {
+  padding: 10px 18px;
+  background: #64748b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.screen {
+  width: 65%;
+  margin: 30px auto;
+  padding: 12px;
+  text-align: center;
+  background: #cbd5e1;
+  border-radius: 50% 50% 5px 5px;
+  color: #172554;
+  font-weight: bold;
+  box-shadow: 0 5px 10px #ddd;
+}
+
+.seat-layout {
+  display: grid;
+  grid-template-columns: repeat(8, 45px);
+  justify-content: center;
+  gap: 12px;
+  margin: 35px auto;
+}
+
+.seat {
+  height: 40px;
+  width: 45px;
+  border: none;
+  border-radius: 7px;
+  background: #22c55e;
+  color: white;
+  cursor: pointer;
+}
+
+.seat:hover:not(:disabled) {
+  transform: scale(1.08);
+}
+
+.seat.selected {
+  background: #2563eb;
+}
+
+.seat.booked {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+.seat-legend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 25px;
+  margin: 25px;
+}
+
+.seat-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.legend-box {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+}
+
+.legend-box.available {
+  background: #22c55e;
+}
+
+.legend-box.selected {
+  background: #2563eb;
+}
+
+.legend-box.booked {
+  background: #94a3b8;
+}
+
+.booking-summary {
+  max-width: 450px;
+  margin: 35px auto;
+  padding: 25px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px #ddd;
+}
+
+.booking-summary h3 {
+  color: #172554;
+}
+
+.continue-button {
+  width: 100%;
+  padding: 13px;
+  margin-top: 15px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.continue-button:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+.message {
+  text-align: center;
+  padding: 20px;
+}
+
+@media (max-width: 500px) {
+  .seat-layout {
+    grid-template-columns: repeat(5, 40px);
+    gap: 8px;
+  }
+
+  .seat {
+    width: 40px;
+  }
+}

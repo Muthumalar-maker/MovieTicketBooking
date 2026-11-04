@@ -1,0 +1,102 @@
+<div class="seats-container">
+
+  <header class="seats-header">
+    <h1>Movie Ticket Booking</h1>
+    <p>Select your preferred seats</p>
+  </header>
+
+  <button class="back-button" (click)="goBack()">
+    ← Back to Shows
+  </button>
+
+  <h2>Select Your Seats</h2>
+
+  <div *ngIf="loading" class="message">
+    Loading seats...
+  </div>
+
+  <div *ngIf="message && !loading" class="message">
+    {{ message }}
+  </div>
+
+  <div *ngIf="!loading && seats.length > 0">
+
+    <div class="screen">
+      SCREEN THIS WAY
+    </div>
+
+    <div class="seat-layout">
+
+      <button
+        *ngFor="let seat of seats"
+        type="button"
+        class="seat"
+        [class.booked]="seat.isBooked"
+        [class.selected]="seat.isSelected"
+        [disabled]="seat.isBooked"
+        (click)="toggleSeat(seat)"
+        [title]="seat.seatNumber"
+      >
+        {{ seat.seatNumber }}
+      </button>
+
+    </div>
+
+    <div class="seat-legend">
+
+      <span>
+        <span class="legend-box available"></span>
+        Available
+      </span>
+
+      <span>
+        <span class="legend-box selected"></span>
+        Selected
+      </span>
+
+      <span>
+        <span class="legend-box booked"></span>
+        Booked
+      </span>
+
+    </div>
+
+    <div class="booking-summary">
+
+      <h3>Booking Summary</h3>
+
+      <p>
+        Selected Seats:
+        <strong>
+          {{ selectedSeats.length }}
+        </strong>
+      </p>
+
+      <p>
+        Seat Numbers:
+        <strong>
+          {{ selectedSeats.length > 0
+            ? selectedSeats.map(s => s.seatNumber).join(', ')
+            : 'None'
+          }}
+        </strong>
+      </p>
+
+      <h3>
+        Total Amount: ₹{{ totalAmount }}
+      </h3>
+
+      <button
+        class="continue-button"
+        type="button"
+        (click)="proceedToBooking()"
+        [disabled]="selectedSeats.length === 0"
+      >
+        Continue to Booking
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
