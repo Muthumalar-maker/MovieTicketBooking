@@ -1,0 +1,28 @@
+<p>login works!</p>
+
+<div class="login-container">
+  <h2>Movie Ticket Booking</h2>
+  <h3>Login</h3>
+
+  <form (ngSubmit)="login()">
+    <input
+      type="email"
+      name="email"
+      [(ngModel)]="email"
+      placeholder="Enter Email"
+      required
+    />
+
+    <input
+      type="password"
+      name="password"
+      [(ngModel)]="password"
+      placeholder="Enter Password"
+      required
+    />
+
+    <button type="submit">Login</button>
+  </form>
+
+  <p>{{ message }}</p>
+</div>
