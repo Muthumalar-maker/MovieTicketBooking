@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using MovieTicketBooking.Constants;
 using MovieTicketBooking.DTOs.ShowSeats;
 using MovieTicketBooking.Services.Interfaces;
 
@@ -63,6 +65,7 @@ namespace MovieTicketBooking.Controllers
             }
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         // POST: api/ShowSeats
         [HttpPost]
         public async Task<ActionResult<ShowSeatResponse>> Create(
@@ -88,6 +91,7 @@ namespace MovieTicketBooking.Controllers
             }
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         // PUT: api/ShowSeats/5
         [HttpPut("{id:int}")]
         public async Task<ActionResult<ShowSeatResponse>> Update(
@@ -113,6 +117,8 @@ namespace MovieTicketBooking.Controllers
             }
         }
 
+
+        [Authorize(Roles = UserRoles.Admin)]
         // DELETE: api/ShowSeats/5
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)

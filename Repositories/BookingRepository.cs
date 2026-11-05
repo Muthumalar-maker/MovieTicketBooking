@@ -17,12 +17,14 @@ namespace MovieTicketBooking.Repositories
         // GET ALL BOOKINGS
         public async Task<List<Booking>> GetAllAsync(
             int? showId = null,
-            string? status = null)
+            string? status = null,
+            int? userId = null)
         {
             var query = _context.Bookings
                 .Include(b => b.Show)
                 .Include(b => b.BookingSeats)
                     .ThenInclude(bs => bs.Seat)
+                .AsNoTracking()
                 .AsQueryable();
 
             if (showId.HasValue)
@@ -35,13 +37,39 @@ namespace MovieTicketBooking.Repositories
                 query = query.Where(b => b.Status == status);
             }
 
+            if (userId.HasValue)
+            {
+                query = query.Where(b => b.UserId == userId.Value);
+            }
+
             return await query
                 .OrderByDescending(b => b.BookingDate)
                 .ToListAsync();
         }
 
         // GET BOOKING BY ID
-        public async Task<Booking?> GetByIdAsync(int id)
+        public async Task<Booking?> GetByIdAsync(
+            int id,
+            int? userId = null)
+        {
+            var query = _context.Bookings
+                .Include(b => b.Show)
+                .Include(b => b.BookingSeats)
+                    .ThenInclude(bs => bs.Seat)
+                .AsNoTracking()
+                .AsQueryable();
+
+            if (userId.HasValue)
+            {
+                query = query.Where(b => b.UserId == userId.Value);
+            }
+
+            return await query.FirstOrDefaultAsync(
+                b => b.BookingId == id);
+        }
+
+        // GET BOOKING BY ID FOR UPDATE
+        public async Task<Booking?> GetByIdForUpdateAsync(int id)
         {
             return await _context.Bookings
                 .Include(b => b.Show)
@@ -51,13 +79,23 @@ namespace MovieTicketBooking.Repositories
         }
 
         // GET BOOKINGS BY SHOW ID
-        public async Task<List<Booking>> GetByShowIdAsync(int showId)
+        public async Task<List<Booking>> GetByShowIdAsync(
+            int showId,
+            int? userId = null)
         {
-            return await _context.Bookings
+            var query = _context.Bookings
                 .Include(b => b.Show)
                 .Include(b => b.BookingSeats)
                     .ThenInclude(bs => bs.Seat)
-                .Where(b => b.ShowId == showId)
+                .AsNoTracking()
+                .Where(b => b.ShowId == showId);
+
+            if (userId.HasValue)
+            {
+                query = query.Where(b => b.UserId == userId.Value);
+            }
+
+            return await query
                 .OrderByDescending(b => b.BookingDate)
                 .ToListAsync();
         }
@@ -133,7 +171,6 @@ namespace MovieTicketBooking.Repositories
                 _context.Bookings.Add(booking);
 
                 await _context.SaveChangesAsync();
-
                 await transaction.CommitAsync();
 
                 return booking;
@@ -146,20 +183,25 @@ namespace MovieTicketBooking.Repositories
         }
 
         // CANCEL BOOKING AND RELEASE SEATS
-        public async Task<Booking?> CancelWithSeatsAsync(int bookingId)
+        public async Task<Booking?> CancelWithSeatsAsync(
+            int bookingId,
+            int? userId = null)
         {
             using var transaction =
                 await _context.Database.BeginTransactionAsync();
 
             try
             {
-                var booking = await _context.Bookings
-                    .Include(b => b.Show)
-                    .Include(b => b.BookingSeats)
-                        .ThenInclude(bs => bs.Seat)
-                    .FirstOrDefaultAsync(b => b.BookingId == bookingId);
+                var booking = await GetByIdForUpdateAsync(bookingId);
 
                 if (booking == null)
+                {
+                    await transaction.RollbackAsync();
+                    return null;
+                }
+
+                // Check booking ownership
+                if (userId.HasValue && booking.UserId != userId.Value)
                 {
                     await transaction.RollbackAsync();
                     return null;
@@ -195,7 +237,6 @@ namespace MovieTicketBooking.Repositories
                 }
 
                 await _context.SaveChangesAsync();
-
                 await transaction.CommitAsync();
 
                 return booking;

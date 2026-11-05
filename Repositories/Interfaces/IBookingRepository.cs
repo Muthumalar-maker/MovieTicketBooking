@@ -1,4 +1,5 @@
-﻿using MovieTicketBooking.Models;
+﻿
+using MovieTicketBooking.Models;
 
 namespace MovieTicketBooking.Repositories.Interfaces
 {
@@ -6,11 +7,18 @@ namespace MovieTicketBooking.Repositories.Interfaces
     {
         Task<List<Booking>> GetAllAsync(
             int? showId = null,
-            string? status = null);
+            string? status = null,
+            int? userId = null);
 
-        Task<Booking?> GetByIdAsync(int id);
+        Task<Booking?> GetByIdAsync(
+            int id,
+            int? userId = null);
 
-        Task<List<Booking>> GetByShowIdAsync(int showId);
+        Task<Booking?> GetByIdForUpdateAsync(int id);
+
+        Task<List<Booking>> GetByShowIdAsync(
+            int showId,
+            int? userId = null);
 
         Task<Show?> GetShowByIdAsync(int showId);
 
@@ -18,6 +26,8 @@ namespace MovieTicketBooking.Repositories.Interfaces
             Booking booking,
             List<int> seatIds);
 
-        Task<Booking?> CancelWithSeatsAsync(int bookingId);
+        Task<Booking?> CancelWithSeatsAsync(
+            int bookingId,
+            int? userId = null);
     }
 }

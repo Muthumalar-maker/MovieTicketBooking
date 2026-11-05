@@ -5,5 +5,7 @@ namespace MovieTicketBooking.Services.Interfaces
     public interface IUserService
     {
         Task<string> LoginAsync(LoginDto loginDto);
+
+        Task RegisterAsync(RegisterDto registerDto);
     }
 }

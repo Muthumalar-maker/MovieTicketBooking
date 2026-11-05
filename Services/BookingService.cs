@@ -1,4 +1,5 @@
-﻿using MovieTicketBooking.DTOs.Bookings;
+﻿
+using MovieTicketBooking.DTOs.Bookings;
 using MovieTicketBooking.Models;
 using MovieTicketBooking.Repositories.Interfaces;
 using MovieTicketBooking.Services.Interfaces;
@@ -17,20 +18,24 @@ namespace MovieTicketBooking.Services
         // GET ALL BOOKINGS
         public async Task<List<BookingResponse>> GetAllAsync(
             int? showId = null,
-            string? status = null)
+            string? status = null,
+            int? userId = null)
         {
-            var bookings = await _bookingRepository.GetAllAsync(showId, status);
+            var bookings = await _bookingRepository.GetAllAsync(
+                showId, status, userId);
 
             return bookings.Select(MapToResponse).ToList();
         }
 
         // GET BOOKING BY ID
-        public async Task<BookingResponse?> GetByIdAsync(int id)
+        public async Task<BookingResponse?> GetByIdAsync(
+            int id,
+            int? userId = null)
         {
             if (id <= 0)
                 throw new ArgumentException("Invalid booking ID.");
 
-            var booking = await _bookingRepository.GetByIdAsync(id);
+            var booking = await _bookingRepository.GetByIdAsync(id, userId);
 
             if (booking == null)
                 return null;
@@ -39,7 +44,9 @@ namespace MovieTicketBooking.Services
         }
 
         // GET BOOKINGS BY SHOW ID
-        public async Task<List<BookingResponse>> GetByShowIdAsync(int showId)
+        public async Task<List<BookingResponse>> GetByShowIdAsync(
+            int showId,
+            int? userId = null)
         {
             if (showId <= 0)
                 throw new ArgumentException("Invalid show ID.");
@@ -49,38 +56,46 @@ namespace MovieTicketBooking.Services
             if (show == null)
                 throw new KeyNotFoundException("Show not found.");
 
-            var bookings = await _bookingRepository.GetByShowIdAsync(showId);
+            var bookings = await _bookingRepository.GetByShowIdAsync(
+                showId, userId);
 
             return bookings.Select(MapToResponse).ToList();
         }
 
         // CREATE BOOKING
         public async Task<BookingResponse> CreateAsync(
-            CreateBookingRequest request)
+            CreateBookingRequest request,
+            int userId,
+            string customerName,
+            string customerEmail)
         {
             if (request == null)
                 throw new ArgumentException("Booking request is required.");
 
-            if (string.IsNullOrWhiteSpace(request.CustomerName))
+            if (userId <= 0)
+                throw new ArgumentException("Invalid user ID.");
+
+            if (string.IsNullOrWhiteSpace(customerName))
                 throw new ArgumentException("Customer name is required.");
 
-            if (request.CustomerName.Length > 100)
-                throw new ArgumentException("Customer name cannot exceed 100 characters.");
+            if (customerName.Length > 100)
+                throw new ArgumentException(
+                    "Customer name cannot exceed 100 characters.");
 
-            if (string.IsNullOrWhiteSpace(request.CustomerEmail))
-                throw new ArgumentException("Customer email is required.");
-
-            if (request.CustomerEmail.Length > 150 ||
-                !IsValidEmail(request.CustomerEmail))
+            if (string.IsNullOrWhiteSpace(customerEmail) ||
+                customerEmail.Length > 150 ||
+                !IsValidEmail(customerEmail))
             {
-                throw new ArgumentException("Enter a valid email address.");
+                throw new ArgumentException(
+                    "A valid customer email is required.");
             }
 
             if (string.IsNullOrWhiteSpace(request.CustomerPhone))
                 throw new ArgumentException("Customer phone is required.");
 
             if (request.CustomerPhone.Length > 15)
-                throw new ArgumentException("Phone number cannot exceed 15 characters.");
+                throw new ArgumentException(
+                    "Phone number cannot exceed 15 characters.");
 
             if (request.ShowId <= 0)
                 throw new ArgumentException("Invalid show ID.");
@@ -92,9 +107,11 @@ namespace MovieTicketBooking.Services
                 throw new ArgumentException("Invalid seat ID.");
 
             if (request.SeatIds.Distinct().Count() != request.SeatIds.Count)
-                throw new ArgumentException("Duplicate seat IDs are not allowed.");
+                throw new ArgumentException(
+                    "Duplicate seat IDs are not allowed.");
 
-            var show = await _bookingRepository.GetShowByIdAsync(request.ShowId);
+            var show = await _bookingRepository.GetShowByIdAsync(
+                request.ShowId);
 
             if (show == null)
                 throw new KeyNotFoundException("Show not found.");
@@ -104,17 +121,19 @@ namespace MovieTicketBooking.Services
                     "Bookings are not allowed for a show that has already started.");
 
             if (show.TicketPrice < 0)
-                throw new InvalidOperationException("Invalid show ticket price.");
+                throw new InvalidOperationException(
+                    "Invalid show ticket price.");
 
             var booking = new Booking
             {
                 BookingReference = "MOV" +
                     Guid.NewGuid().ToString("N")[..12].ToUpper(),
 
-                ShowId = request.ShowId,
-                CustomerName = request.CustomerName.Trim(),
-                CustomerEmail = request.CustomerEmail.Trim(),
+                UserId = userId,
+                CustomerName = customerName.Trim(),
+                CustomerEmail = customerEmail.Trim(),
                 CustomerPhone = request.CustomerPhone.Trim(),
+                ShowId = request.ShowId,
                 BookingDate = DateTime.UtcNow,
                 Status = "Confirmed",
                 TotalAmount = 0
@@ -129,12 +148,15 @@ namespace MovieTicketBooking.Services
         }
 
         // CANCEL BOOKING
-        public async Task<BookingResponse?> CancelAsync(int bookingId)
+        public async Task<BookingResponse?> CancelAsync(
+            int bookingId,
+            int? userId = null)
         {
             if (bookingId <= 0)
                 throw new ArgumentException("Invalid booking ID.");
 
-            var booking = await _bookingRepository.GetByIdAsync(bookingId);
+            var booking = await _bookingRepository.GetByIdAsync(
+                bookingId, userId);
 
             if (booking == null)
                 return null;
@@ -144,7 +166,8 @@ namespace MovieTicketBooking.Services
                     "Only confirmed bookings can be cancelled.");
 
             var cancelledBooking =
-                await _bookingRepository.CancelWithSeatsAsync(bookingId);
+                await _bookingRepository.CancelWithSeatsAsync(
+                    bookingId, userId);
 
             if (cancelledBooking == null)
                 return null;
@@ -158,7 +181,6 @@ namespace MovieTicketBooking.Services
             try
             {
                 var address = new System.Net.Mail.MailAddress(email);
-
                 return address.Address == email.Trim();
             }
             catch

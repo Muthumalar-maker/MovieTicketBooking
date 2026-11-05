@@ -17,6 +17,7 @@ namespace MovieTicketBooking.Controllers
             _theatreService = theatreService;
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         // GET: api/theatres
         [HttpGet]
         public async Task<ActionResult<List<TheatreResponse>>> GetAll()
@@ -26,6 +27,7 @@ namespace MovieTicketBooking.Controllers
             return Ok(theatres);
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         // GET: api/theatres/1
         [HttpGet("{id:int}")]
         public async Task<ActionResult<TheatreResponse>> GetById(int id)

@@ -132,6 +132,15 @@ namespace MovieTicketBooking.Data
    .IsUnique();
 
 
+                modelBuilder.Entity<Booking>()
+    .HasOne(x => x.User)
+    .WithMany()
+    .HasForeignKey(x => x.UserId)
+    .OnDelete(DeleteBehavior.Restrict);
+
+
+
+
             });
 
             // Show Configuration

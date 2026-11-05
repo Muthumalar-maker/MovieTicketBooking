@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using MovieTicketBooking.DTOs.Movies;
 using MovieTicketBooking.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using MovieTicketBooking.Constants;
 
 namespace MovieTicketBooking.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MoviesController : ControllerBase
@@ -19,6 +19,7 @@ namespace MovieTicketBooking.Controllers
         }
 
         // GET: api/movies
+        // Public access
         [HttpGet]
         public async Task<ActionResult<PagedMovieResponse>> GetAll(
             [FromQuery] int pageNumber = 1,
@@ -41,6 +42,7 @@ namespace MovieTicketBooking.Controllers
         }
 
         // GET: api/movies/1
+        // Public access
         [HttpGet("{id:int}")]
         public async Task<ActionResult<MovieResponse>> GetById(int id)
         {
@@ -60,6 +62,7 @@ namespace MovieTicketBooking.Controllers
         }
 
         // GET: api/movies/search?title=leo
+        // Public access
         [HttpGet("search")]
         public async Task<ActionResult<List<MovieResponse>>> Search(
             [FromQuery] string title)
@@ -76,8 +79,9 @@ namespace MovieTicketBooking.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
         // POST: api/movies
+        // Admin only
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         public async Task<ActionResult<MovieResponse>> Create(
             CreateMovieRequest request)
@@ -97,10 +101,9 @@ namespace MovieTicketBooking.Controllers
             }
         }
 
-
-        [Authorize(Roles = UserRoles.Admin)]
-        [HttpPut("{id}")]
         // PUT: api/movies/1
+        // Admin only
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPut("{id:int}")]
         public async Task<ActionResult<MovieResponse>> Update(
             int id,
@@ -121,9 +124,9 @@ namespace MovieTicketBooking.Controllers
             }
         }
 
-        [Authorize(Roles = UserRoles.Admin)]
-        [HttpDelete("{id}")]
         // DELETE: api/movies/1
+        // Admin only
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {

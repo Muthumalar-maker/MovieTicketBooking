@@ -1,4 +1,5 @@
-﻿using MovieTicketBooking.DTOs.Bookings;
+﻿
+using MovieTicketBooking.DTOs.Bookings;
 
 namespace MovieTicketBooking.Services.Interfaces
 {
@@ -6,14 +7,25 @@ namespace MovieTicketBooking.Services.Interfaces
     {
         Task<List<BookingResponse>> GetAllAsync(
             int? showId = null,
-            string? status = null);
+            string? status = null,
+            int? userId = null);
 
-        Task<BookingResponse?> GetByIdAsync(int id);
+        Task<BookingResponse?> GetByIdAsync(
+            int id,
+            int? userId = null);
 
-        Task<List<BookingResponse>> GetByShowIdAsync(int showId);
+        Task<List<BookingResponse>> GetByShowIdAsync(
+            int showId,
+            int? userId = null);
 
-        Task<BookingResponse> CreateAsync(CreateBookingRequest request);
+        Task<BookingResponse> CreateAsync(
+            CreateBookingRequest request,
+            int userId,
+            string customerName,
+            string customerEmail);
 
-        Task<BookingResponse?> CancelAsync(int bookingId);
+        Task<BookingResponse?> CancelAsync(
+            int bookingId,
+            int? userId = null);
     }
 }

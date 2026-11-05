@@ -17,12 +17,14 @@ namespace MovieTicketBooking.Controllers
             _showService = showService;
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpGet]
         public async Task<ActionResult<List<ShowResponse>>> GetAll()
         {
             return Ok(await _showService.GetAllAsync());
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpGet("{id:int}")]
         public async Task<ActionResult<ShowResponse>> GetById(int id)
         {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MovieTicketBooking.DTOs.Auth;
 using MovieTicketBooking.Services.Interfaces;
 
@@ -15,8 +16,35 @@ namespace MovieTicketBooking.Controllers
             _userService = userService;
         }
 
+        // REGISTER
+        [AllowAnonymous]
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(
+            [FromBody] RegisterDto registerDto)
+        {
+            try
+            {
+                await _userService.RegisterAsync(registerDto);
+
+                return Ok(new
+                {
+                    message = "Registration successful."
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new
+                {
+                    message = ex.Message
+                });
+            }
+        }
+
+        // LOGIN
+        [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginDto loginDto)
+        public async Task<IActionResult> Login(
+            [FromBody] LoginDto loginDto)
         {
             try
             {
